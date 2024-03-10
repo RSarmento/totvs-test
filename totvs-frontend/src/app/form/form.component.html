@@ -1,0 +1,16 @@
+<po-dynamic-form
+  #dynamicForm
+  [p-fields]="fields"
+  [p-value]="formValue"
+>
+</po-dynamic-form>
+<br />
+<div class="po-row">
+  <po-button
+    type="submit"
+    class="po-md-3"
+    p-label="Salvar"
+    [p-disabled]="!!dynamicForm.form.invalid || isLoading"
+    (p-click)="submitForm()"
+  ></po-button>
+</div>
