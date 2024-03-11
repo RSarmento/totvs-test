@@ -3,7 +3,7 @@ package com.totvs.UserRegister.validation;
 import com.totvs.UserRegister.domain.PhoneNumber;
 import com.totvs.UserRegister.dto.UserRegisterControllerRequestDto;
 import com.totvs.UserRegister.exception.ValidationException;
-import com.totvs.UserRegister.stringUtil.UserRegisterValidationStringUtil;
+import com.totvs.UserRegister.stringUtil.UserRegisterErrorMessages;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ class UserRegisterValidationTest {
                 ValidationException.class,
                 () -> userRegisterValidation
                         .validateUser(null));
-        assertEquals(UserRegisterValidationStringUtil.USER_DATA_IS_MISSING, exception.getMessage());
+        assertEquals(UserRegisterErrorMessages.USER_DATA_IS_MISSING, exception.getMessage());
     }
 
     @Test
@@ -60,7 +60,7 @@ class UserRegisterValidationTest {
                                     VALID_USER_ADDRESS,
                                     VALID_USER_NEIGHBORHOOD,
                                     validPhoneNumberList)));
-            assertEquals(UserRegisterValidationStringUtil.USER_NAME_IS_MISSING, exception.getMessage());
+            assertEquals(UserRegisterErrorMessages.USER_NAME_IS_MISSING, exception.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class UserRegisterValidationTest {
                                     testStringValue,
                                     VALID_USER_NEIGHBORHOOD,
                                     validPhoneNumberList)));
-            assertEquals(UserRegisterValidationStringUtil.USER_ADDRESS_IS_MISSING, exception.getMessage());
+            assertEquals(UserRegisterErrorMessages.USER_ADDRESS_IS_MISSING, exception.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ class UserRegisterValidationTest {
                                     VALID_USER_ADDRESS,
                                     testStringValue,
                                     validPhoneNumberList)));
-            assertEquals(UserRegisterValidationStringUtil.USER_NEIGHBORHOOD_IS_MISSING, exception.getMessage());
+            assertEquals(UserRegisterErrorMessages.USER_NEIGHBORHOOD_IS_MISSING, exception.getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ class UserRegisterValidationTest {
                                     VALID_USER_ADDRESS,
                                     VALID_USER_NEIGHBORHOOD,
                                     invalidList)));
-            assertEquals(UserRegisterValidationStringUtil.PHONE_NUMBER_IS_MISSING, exception.getMessage());
+            assertEquals(UserRegisterErrorMessages.PHONE_NUMBER_IS_MISSING, exception.getMessage());
         }
     }
 
@@ -133,7 +133,7 @@ class UserRegisterValidationTest {
                                 VALID_USER_ADDRESS,
                                 VALID_USER_NEIGHBORHOOD,
                                 new ArrayList<>(Collections.singletonList("1")))));
-        assertEquals(UserRegisterValidationStringUtil.INVALID_PHONE_NUMBER_LENGTH, exception.getMessage());
+        assertEquals(UserRegisterErrorMessages.INVALID_PHONE_NUMBER_LENGTH, exception.getMessage());
     }
 
     @Test
@@ -157,7 +157,7 @@ class UserRegisterValidationTest {
                                             .map(PhoneNumber::new)
                                             .collect(Collectors.toList()),
                                     new PhoneNumber(validPhoneNumber)));
-            assertEquals(UserRegisterValidationStringUtil.PHONE_NUMBER_ALREADY_REGISTERED, exception.getMessage());
+            assertEquals(UserRegisterErrorMessages.PHONE_NUMBER_ALREADY_REGISTERED, exception.getMessage());
         }
 
     }
@@ -171,6 +171,6 @@ class UserRegisterValidationTest {
                                         .map(PhoneNumber::new)
                                         .collect(Collectors.toList()),
                                 null));
-        assertEquals(UserRegisterValidationStringUtil.PHONE_NUMBER_IS_MISSING, exception.getMessage());
+        assertEquals(UserRegisterErrorMessages.PHONE_NUMBER_IS_MISSING, exception.getMessage());
     }
 }

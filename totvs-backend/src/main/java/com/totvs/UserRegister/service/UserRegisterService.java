@@ -7,10 +7,18 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * The type User register service. Used to access Json API Server.
+ */
 @Service
 public class UserRegisterService extends JsonAPIService{
 
-
+    /**
+     * Gets user.
+     *
+     * @param id the id
+     * @return the user
+     */
     public User getUser(long id) {
 
         return webClient
@@ -21,6 +29,11 @@ public class UserRegisterService extends JsonAPIService{
                 .block(REQUEST_TIMEOUT);
     }
 
+    /**
+     * Gets all users.
+     *
+     * @return the all
+     */
     public List<User> getAll() {
 
         return webClient
@@ -32,6 +45,12 @@ public class UserRegisterService extends JsonAPIService{
                 .block(REQUEST_TIMEOUT);
     }
 
+    /**
+     * Creates a user.
+     *
+     * @param newUser the new user
+     * @return the user with id
+     */
     public UserWithID createUser(User newUser) {
 
         return webClient
@@ -42,6 +61,4 @@ public class UserRegisterService extends JsonAPIService{
                 .bodyToMono(UserWithID.class)
                 .block(REQUEST_TIMEOUT);
     }
-
-
 }

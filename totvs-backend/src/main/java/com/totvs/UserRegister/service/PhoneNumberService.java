@@ -6,9 +6,17 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * The type Phone number service. Used to access Json API Server.
+ */
 @Service
 public class PhoneNumberService extends JsonAPIService {
 
+    /**
+     * Get all list.
+     *
+     * @return the list
+     */
     public List<PhoneNumber> getAll(){
         return webClient
                 .get()
@@ -19,6 +27,12 @@ public class PhoneNumberService extends JsonAPIService {
                 .block(REQUEST_TIMEOUT);
     }
 
+    /**
+     * Create phone number associated with a user.
+     *
+     * @param newPhoneNumber the new phone number
+     * @param userID         the user id
+     */
     public void createPhoneNumber(PhoneNumber newPhoneNumber, String userID) {
         newPhoneNumber.setUserID(userID);
         webClient
