@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   PoButtonModule,
   PoDynamicFormField,
   PoDynamicFormFieldChanged,
   PoDynamicFormValidation,
   PoDynamicModule,
-  PoNotificationService
+  PoNotificationService,
 } from '@po-ui/ng-components';
+import { PhoneValidationService } from '../services/phone-validation.service';
+import { Observable, Subscription, of } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -16,12 +18,13 @@ import {
   imports: [PoDynamicModule, PoButtonModule],
 })
 export class FormComponent {
+  @Input() isLoading = false;
+  @Output() submitted = new EventEmitter();
   constructor(
     private http: HttpClient,
-    public poNotification: PoNotificationService
+    public poNotification: PoNotificationService,
+    private phoneValidationService: PhoneValidationService
   ) {}
-
-  isLoading = false;
 
   fields: PoDynamicFormField[] = [
     {
@@ -55,46 +58,41 @@ export class FormComponent {
       showRequired: true,
       mask: '(99) 99999-9999',
       gridColumns: 12,
-      label: 'Telefone',    
-    }, // TODO: Deve ser uma lista de telefones e não deve permitir dois números iguais
+      label: 'Telefone',
+    },
   ];
 
   formValue: any = {};
 
-  validateFields = ["PhoneNumber"]
+  validateFields = ['PhoneNumber'];
 
-  validatePhone(
-    changedValue: PoDynamicFormFieldChanged
-  ): Promise<PoDynamicFormValidation> {
-    return new Promise((resolve) => {
-      this.http.post(`http://localhost:8080/validate`, { number: changedValue.value.PhoneNumber })
-      .subscribe({
-        next: response => {
-          if(response) {
-            console.log("telefone válido")
-            resolve({
-              fields: [{
+  validatePhone(changedValue: PoDynamicFormFieldChanged): Subscription {
+    return this.phoneValidationService
+      .validatePhone(changedValue.value.PhoneNumber)
+      .subscribe((response) => {
+        if (response) {
+          return {
+            fields: [
+              {
                 property: 'phone',
                 pattern: undefined,
                 errorMessage: '',
-              }],
-            }); 
-        } else {
-            console.log("telefone inválido")
-            resolve({
-              fields: [{
-                property: 'phone',
-                pattern: '/^(?!.*).*$/',
-                errorMessage: 'Telefone já cadastrado',
-              }],
-              focus: 'phone'
-            })
-          }
-        },        
-      })
-  })
-}
-  
+              },
+            ],
+          };
+        }
+        return {
+          fields: [
+            {
+              property: 'phone',
+              pattern: '/^(?!.*).*$/',
+              errorMessage: 'Telefone já cadastrado',
+            },
+          ],
+          focus: 'phone',
+        };
+      });
+  }
 
   submitForm() {
     this.isLoading = true;
@@ -104,15 +102,6 @@ export class FormComponent {
       neighborhood: this.formValue.Neighborhood,
       phoneNumberList: [this.formValue.PhoneNumber],
     };
-    this.http.post('http://localhost:8080/user', data).subscribe({
-      next: response => {
-        this.poNotification.success('Usuário cadastrado com sucesso');
-        this.isLoading = false;
-      },
-      error: err => {
-        this.poNotification.error('Erro ao cadastrar usuário');
-        this.isLoading = false;
-      },
-    });
+    this.submitted.emit(data);
   }
 }
