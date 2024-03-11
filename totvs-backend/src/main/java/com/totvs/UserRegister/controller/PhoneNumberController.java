@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+
+/**
+ * The type Phone number controller, contains the validation relating to the phone number
+ */
 @RestController
 @RequestMapping("/validate")
 public class PhoneNumberController {
-
 
     @Autowired
     private UserRegisterValidation userRegisterValidation;
@@ -25,6 +27,14 @@ public class PhoneNumberController {
     public PhoneNumberController() {
     }
 
+
+    /**
+     * Validate unique phone number response entity.
+     *
+     * @param phoneNumber the phone number
+     * @return the response entity
+     * @throws UserRegisterException the user register exception
+     */
     @PostMapping
     public ResponseEntity<Boolean> validateUniquePhoneNumber(@RequestBody PhoneNumber phoneNumber)
             throws UserRegisterException {

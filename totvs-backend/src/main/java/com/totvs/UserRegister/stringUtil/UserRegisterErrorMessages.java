@@ -1,8 +1,10 @@
 package com.totvs.UserRegister.stringUtil;
 
-public class UserRegisterValidationStringUtil {
+/**
+ * The type User register validation string util. Contains all strings of error messages.
+ */
+public class UserRegisterErrorMessages {
 
-  
     public final static String USER_DATA_IS_MISSING = "User data is missing";
     public final static String USER_NAME_IS_MISSING = "User name is missing";
     public final static String USER_ADDRESS_IS_MISSING = "User address is missing";

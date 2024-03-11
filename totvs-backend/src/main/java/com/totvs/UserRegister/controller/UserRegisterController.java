@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type User register controller
+ */
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
@@ -28,15 +31,30 @@ public class UserRegisterController {
     private PhoneNumberService phoneNumberRegisterService;
     private UserRegisterValidation userRegisterValidation;
 
+    /**
+     * Instantiates a new User register controller.
+     */
     public UserRegisterController() {
     }
 
+    /**
+     * Instantiates a new User register controller.
+     *
+     * @param userRegisterValidation the user register validation
+     */
     @Autowired
     public UserRegisterController(UserRegisterValidation userRegisterValidation) {
 
         this.userRegisterValidation = userRegisterValidation;
     }
 
+    /**
+     * Create user response entity.
+     *
+     * @param newUserDto the new user dto
+     * @return the response entity
+     * @throws UserRegisterException the user register exception
+     */
     @PostMapping
     public ResponseEntity<UserWithID> createUser(@RequestBody UserRegisterControllerRequestDto newUserDto)
             throws UserRegisterException {

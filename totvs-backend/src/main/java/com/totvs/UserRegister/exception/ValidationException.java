@@ -1,6 +1,15 @@
 package com.totvs.UserRegister.exception;
 
-public class ValidationException extends RuntimeException{
+/**
+ * The type Validation exception.
+ */
+public class ValidationException extends RuntimeException {
+
+    /**
+     * Instantiates a new Validation exception.
+     *
+     * @param message the message
+     */
     public ValidationException(String message) {
         super(message);
     }
