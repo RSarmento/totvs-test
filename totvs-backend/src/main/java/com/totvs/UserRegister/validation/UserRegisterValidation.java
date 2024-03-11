@@ -55,6 +55,9 @@ public class UserRegisterValidation {
                 phoneNumberToValidate.getNumber().isBlank()) {
             throw new ValidationException(UserRegisterValidationStringUtil.PHONE_NUMBER_IS_NULL);
         }
+        if (phoneNumberToValidate.getNumber().length() != 11){
+            throw new ValidationException(UserRegisterValidationStringUtil.PHONE_NUMBER_WRONG_LENGTH);
+        }
         for (PhoneNumber existentPhoneNumber : allPhoneNumberList) {
             if (existentPhoneNumber.getNumber().equals(phoneNumberToValidate.getNumber())) {
                 throw new ValidationException(UserRegisterValidationStringUtil.PHONE_NUMBER_ALREADY_REGISTERED);

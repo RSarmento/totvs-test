@@ -4,7 +4,6 @@ import com.totvs.UserRegister.domain.PhoneNumber;
 import com.totvs.UserRegister.exception.UserRegisterException;
 import com.totvs.UserRegister.exception.ValidationException;
 import com.totvs.UserRegister.service.PhoneNumberService;
-import com.totvs.UserRegister.service.UserRegisterService;
 import com.totvs.UserRegister.validation.UserRegisterValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +26,15 @@ public class PhoneNumberController {
     }
 
     @PostMapping
-    public ResponseEntity<String> validateUniquePhoneNumber(@RequestBody PhoneNumber phoneNumber)
+    public ResponseEntity<Boolean> validateUniquePhoneNumber(@RequestBody PhoneNumber phoneNumber)
             throws UserRegisterException {
 
         try {
             List<PhoneNumber> allPhoneNumberList = phoneNumberRegisterService.getAll();
             userRegisterValidation.phoneNumberIsUnique(allPhoneNumberList, phoneNumber);
         } catch (ValidationException e) {
-            throw new UserRegisterException(e.getMessage(), e.getCause());
+            return ResponseEntity.ok().body(false);
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(true);
     }
 }

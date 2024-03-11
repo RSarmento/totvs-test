@@ -38,7 +38,7 @@ public class UserRegisterController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserRegisterControllerRequestDto newUserDto)
+    public ResponseEntity<UserWithID> createUser(@RequestBody UserRegisterControllerRequestDto newUserDto)
             throws UserRegisterException {
 
         try {
@@ -48,7 +48,7 @@ public class UserRegisterController {
             for (PhoneNumber newPhoneNumber : mapPhoneNumberListFromDto(newUserDto)){
                 phoneNumberRegisterService.createPhoneNumber(newPhoneNumber, user.id());
             }
-            return ResponseEntity.ok().body(user.id());
+            return ResponseEntity.ok().body(user);
         } catch (ValidationException e){
             throw new UserRegisterException(e.getMessage(), e.getCause());
         }
