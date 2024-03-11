@@ -4,7 +4,7 @@ import {
   PoButtonModule,
   PoDynamicFormField,
   PoDynamicFormFieldChanged,
-  PoDynamicFormFieldValidation,
+  PoDynamicFormValidation,
   PoDynamicModule,
   PoNotificationService
 } from '@po-ui/ng-components';
@@ -25,7 +25,7 @@ export class FormComponent {
 
   fields: PoDynamicFormField[] = [
     {
-      property: 'name',
+      property: 'Name',
       required: true,
       showRequired: true,
       minLength: 10,
@@ -34,7 +34,7 @@ export class FormComponent {
       errorMessage: 'O nome deve ter mais de 10 caracteres',
     },
     {
-      property: 'address',
+      property: 'Address',
       required: true,
       showRequired: true,
       gridColumns: 12,
@@ -42,7 +42,7 @@ export class FormComponent {
       errorMessage: 'O endereço é obrigatório',
     },
     {
-      property: 'neighborhood',
+      property: 'Neighborhood',
       required: true,
       showRequired: true,
       gridColumns: 12,
@@ -50,66 +50,68 @@ export class FormComponent {
       errorMessage: 'O bairro é obrigatório',
     },
     {
-      property: 'phone',
+      property: 'PhoneNumber',
       required: true,
       showRequired: true,
       mask: '(99) 99999-9999',
       gridColumns: 12,
-      label: 'Telefone',
-      validate: this.validatePhone.bind(this),
+      label: 'Telefone',    
     }, // TODO: Deve ser uma lista de telefones e não deve permitir dois números iguais
   ];
 
   formValue: any = {};
 
-  async validatePhone(
+  validateFields = ["PhoneNumber"]
+
+  validatePhone(
     changedValue: PoDynamicFormFieldChanged
-  ): Promise<PoDynamicFormFieldValidation> {
-    const isPhoneAvailable = await this.http
-      .post(`http://localhost:8080/validate`, { number: changedValue.value })
-      .toPromise()
-      .then(() => true)
-      .catch(() => false);
-    console.log(isPhoneAvailable);
-    if (!isPhoneAvailable) {
-      return {
-        value: changedValue.value,
-        field: {
-          property: 'phone',
-          pattern: '/^(?!.*).*$/',
-          errorMessage: 'Telefone já cadastrado',
-        },
-        focus: true,
-      };
-    }
-    return {
-      value: changedValue.value,
-      field: {
-        property: 'phone',
-        pattern: undefined,
-        errorMessage: '',
-      },
-    };
-  }
+  ): Promise<PoDynamicFormValidation> {
+    return new Promise((resolve) => {
+      this.http.post(`http://localhost:8080/validate`, { number: changedValue.value.PhoneNumber })
+      .subscribe({
+        next: response => {
+          if(response) {
+            console.log("telefone válido")
+            resolve({
+              fields: [{
+                property: 'phone',
+                pattern: undefined,
+                errorMessage: '',
+              }],
+            }); 
+        } else {
+            console.log("telefone inválido")
+            resolve({
+              fields: [{
+                property: 'phone',
+                pattern: '/^(?!.*).*$/',
+                errorMessage: 'Telefone já cadastrado',
+              }],
+              focus: 'phone'
+            })
+          }
+        },        
+      })
+  })
+}
+  
 
   submitForm() {
     this.isLoading = true;
     const data = {
-      name: this.formValue.name,
-      address: this.formValue.address,
-      neighborhood: this.formValue.neighborhood,
-      phoneNumberList: [this.formValue.phone],
+      name: this.formValue.Name,
+      address: this.formValue.Address,
+      neighborhood: this.formValue.Neighborhood,
+      phoneNumberList: [this.formValue.PhoneNumber],
     };
     this.http.post('http://localhost:8080/user', data).subscribe({
       next: response => {
         this.poNotification.success('Usuário cadastrado com sucesso');
         this.isLoading = false;
-        console.log(response);
       },
       error: err => {
         this.poNotification.error('Erro ao cadastrar usuário');
         this.isLoading = false;
-        console.log(err)
       },
     });
   }

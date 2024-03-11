@@ -2,6 +2,9 @@
   #dynamicForm
   [p-fields]="fields"
   [p-value]="formValue"
+  [p-validate]="this.validatePhone.bind(this)"
+  [p-validate-fields]="validateFields"
+  p-validate-on-input
 >
 </po-dynamic-form>
 <br />
