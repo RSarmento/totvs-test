@@ -4,6 +4,6 @@
   <po-menu [p-menus]="menus"></po-menu>
 
   <po-page-default p-title="Cadastro de usuário">
-    <app-form></app-form>
+    <app-form [isLoading]="isLoading" (submitted)="submitFormValue($event)"></app-form>
   </po-page-default>
 </div>
