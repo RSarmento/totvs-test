@@ -1,6 +1,6 @@
 package com.totvs.UserRegister.domain;
 
-public class PhoneNumber{
+public class PhoneNumber {
 
     private String userID;
     private String number;
